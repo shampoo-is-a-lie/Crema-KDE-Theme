@@ -23,7 +23,7 @@ reversible**. Copy this folder to any machine and run `./install.sh`.
 |-------|--------------|-------------|
 | Color scheme | Crema palette across Plasma + Breeze apps | `color-schemes/Crema.colors` |
 | Global Theme | bundles the below as one selectable theme | `plasma/look-and-feel/com.cafeneurotico.crema.desktop/` |
-| Plasma desktop theme | pinned-Crema panel/widget/tooltip SVGs | `plasma/desktoptheme/Crema/` |
+| Plasma desktop theme | pinned Crema palette (Breeze shapes recolored) | `plasma/desktoptheme/Crema/` |
 | Window style/deco | built-in **Breeze** recolored (rounded in Plasma 6) | — |
 | Splash screen | espresso boot splash with a coffee-cup mark | inside the Global Theme |
 | Konsole | terminal color scheme + profile | `konsole/Crema.*` |
@@ -81,7 +81,7 @@ Then pick another Global Theme in System Settings to switch away. If you used
 ```
 color-schemes/Crema.colors                        # palette mapped to KDE color roles
 look-and-feel/com.cafeneurotico.crema.desktop/    # Global Theme package (+ splash/)
-desktoptheme/Crema/                               # Plasma desktop theme (colors + SVGs)
+desktoptheme/Crema/                               # Plasma desktop theme (pinned colors)
 konsole/Crema.{colorscheme,profile}              # terminal theme
 editor/crema.theme                                # KSyntaxHighlighting theme
 sddm/{crema-login.jpg,theme.conf.user,apply-sddm.sh}  # login screen (sudo, separate)
@@ -92,7 +92,8 @@ install.sh                                        # portable installer (user-lev
 ## Roadmap
 
 - **Phase 1 — done:** color scheme + Global Theme (Breeze recolored) + installer.
-- **Phase 2 — done:** Plasma desktop theme (custom SVGs), Konsole scheme, splash
+- **Phase 2 — done:** Plasma desktop theme (pinned Crema palette; uses Breeze's
+  shapes recolored, so popup shadows render correctly), Konsole scheme, splash
   screen, and editor syntax theme.
 - **SDDM login — done:** Crema background reskin of the breeze greeter, applied
   separately with `sudo` (see above).
