@@ -1,0 +1,31 @@
+{
+    "manifest_version": 3,
+    "version": "1.0",
+    "name": "Crema",
+    "description": "Warm espresso theme for Chromium browsers (Chrome / Brave / Brave-Origin).",
+    "theme": {
+        "colors": {
+            "frame": [44, 30, 22],
+            "frame_inactive": [36, 24, 17],
+            "frame_incognito": [36, 24, 17],
+            "toolbar": [67, 40, 24],
+            "toolbar_button_icon": [212, 163, 115],
+            "tab_background_text": [230, 204, 152],
+            "tab_text": [255, 230, 167],
+            "tab_background_text_inactive": [164, 113, 72],
+            "bookmark_text": [255, 230, 167],
+            "omnibox_background": [36, 24, 17],
+            "omnibox_text": [255, 230, 167],
+            "ntp_background": [44, 30, 22],
+            "ntp_text": [255, 230, 167],
+            "ntp_link": [212, 163, 115],
+            "button_background": [67, 40, 24]
+        },
+        "tints": {
+            "buttons": [0.09, 0.4, 0.55]
+        },
+        "properties": {
+            "ntp_background_alignment": "center"
+        }
+    }
+}

@@ -1,0 +1,46 @@
+/*
+ * Crema — Firefox chrome recolor (toolbar / tabs / urlbar).
+ * Install: copy to  <profile>/chrome/userChrome.css  and set
+ *   toolkit.legacyUserProfileCustomizations.stylesheets = true  (about:config),
+ * then restart Firefox. The installer can do both for you.
+ */
+:root {
+  --crema-bg:      #2C1E16;
+  --crema-menu:    #432818;
+  --crema-view:    #241811;
+  --crema-accent:  #D4A373;
+  --crema-text:    #FFE6A7;
+  --crema-dim:     #A47148;
+  --crema-border:  #8B5A2B;
+}
+
+/* Toolbars + tab strip */
+#navigator-toolbox,
+#nav-bar,
+#PersonalToolbar,
+#TabsToolbar,
+#titlebar {
+  background-color: var(--crema-menu) !important;
+  color: var(--crema-text) !important;
+  border-color: var(--crema-border) !important;
+}
+
+/* Tabs */
+.tabbrowser-tab .tab-content { color: var(--crema-dim) !important; }
+.tabbrowser-tab[selected] .tab-content { color: var(--crema-text) !important; }
+.tab-background[selected] {
+  background-color: var(--crema-bg) !important;
+  border-top: 2px solid var(--crema-accent) !important;
+}
+
+/* URL bar / search */
+#urlbar,
+#searchbar {
+  background-color: var(--crema-view) !important;
+  color: var(--crema-text) !important;
+  border: 1px solid var(--crema-border) !important;
+}
+#urlbar[focused="true"] { border-color: var(--crema-accent) !important; }
+
+/* Toolbar buttons / icons */
+.toolbarbutton-1 { color: var(--crema-text) !important; }

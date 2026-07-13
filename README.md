@@ -17,34 +17,45 @@ A **portable, user-level** KDE theme. Everything installs into your home
 (`~/.local/share`, `~/.config`) — **no root, no system files touched, fully
 reversible**. Copy this folder to any machine and run `./install.sh`.
 
-**Components**
+**Components** (each is an installer toggle — its `id` in parentheses)
 
-| Piece | What it does | Installs to |
-|-------|--------------|-------------|
-| Color scheme | Crema palette across Plasma + Breeze apps | `color-schemes/Crema.colors` |
-| Global Theme | bundles the below as one selectable theme | `plasma/look-and-feel/com.cafeneurotico.crema.desktop/` |
-| Plasma desktop theme | pinned Crema palette (Breeze shapes recolored) | `plasma/desktoptheme/Crema/` |
-| Window style/deco | built-in **Breeze** recolored (rounded in Plasma 6) | — |
-| Splash screen | espresso boot splash with a coffee-cup mark | inside the Global Theme |
-| Konsole | terminal color scheme + profile | `konsole/Crema.*` |
-| Editor theme | Kate/KWrite/KDevelop syntax colors | `org.kde.syntax-highlighting/themes/crema.theme` |
-| Font (optional) | **Poppins**, titlebar SemiBold | `fonts/Crema/` + `--font` |
+| Piece | What it does | id |
+|-------|--------------|----|
+| Color scheme | Crema palette across Plasma + Qt/KDE apps | `colorscheme` |
+| Global Theme | bundles Plasma style + splash as one selectable theme | `globaltheme` |
+| Plasma desktop theme | pinned Crema palette (Breeze shapes recolored) | `desktoptheme` |
+| Konsole / Yakuake | terminal scheme + profile, **set as the default** | `konsole` |
+| Editor theme | Kate/KWrite/KDevelop syntax colors | `editor` |
+| Bundled fonts | install the Poppins family | `fonts` |
+| UI font (opt-in) | set Poppins as the interface font, titlebar SemiBold | `fontapply` |
+| GTK apps | GTK4/libadwaita colors (+ Flatpak read access); GTK3 is automatic | `gtk` |
+| Chromium (opt-in) | stage a Crema theme for Chrome/Brave (load unpacked) | `browser_chromium` |
+| Firefox (opt-in) | apply a Crema `userChrome.css` to your profiles | `browser_firefox` |
 
-Notes: **does not change your wallpaper**; the widget style stays Breeze
-(a fully custom Qt style would need the Kvantum engine, which can't be shipped
-portably and would require system layering on atomic distros).
+Window decoration/style stays **Breeze** recolored (rounded in Plasma 6). Notes:
+**does not change your wallpaper**; a fully custom Qt widget style would need the
+Kvantum engine (not portable on atomic distros). Login screen is separate (below).
 
 ## Install
 
+The easiest way is the **visual installer** — a checklist to pick components:
+
 ```bash
-./install.sh            # install files only (nothing changes yet)
-./install.sh --apply    # install and switch to Crema now
-./install.sh --apply --font   # also set Poppins as the interface font
+./install.sh --gui
 ```
 
-Or apply manually after installing: **System Settings → Colors & Themes →
-Global Theme → Crema**. The color scheme alone is also available under
-**Colors & Themes → Colors → Crema**.
+Or the CLI:
+
+```bash
+./install.sh                 # install the default set (nothing applied yet)
+./install.sh --apply         # install defaults and switch to Crema now
+./install.sh --all --apply   # everything (incl. font, browsers) + apply
+./install.sh --only=gtk,konsole   # just these components
+./install.sh --font          # add the Poppins UI font to the default set
+./install.sh --list          # list component ids
+```
+
+You can also apply manually: **System Settings → Colors & Themes → Global Theme → Crema**.
 
 ## Login screen (SDDM) — applied separately
 
@@ -68,34 +79,40 @@ image tool if needed.
 ## Uninstall
 
 ```bash
-./install.sh --uninstall             # removes the user-level pieces
+./install.sh --uninstall             # removes the default set
+./install.sh --uninstall --all       # removes every component
+./install.sh --uninstall --only=gtk  # just one
 sudo ./sddm/apply-sddm.sh --revert   # (if you applied the login screen)
 ```
 
-Then pick another Global Theme in System Settings to switch away. If you used
-`--font`, your previous `kdeglobals` is saved at
-`~/.config/kdeglobals.crema-fontbackup`.
+Uninstall restores files it backed up (e.g. `kdeglobals`, `gtk-4.0/gtk.css` from
+their `*.pre-crema.bak`). Then pick another Global Theme in System Settings.
 
 ## Layout
 
 ```
+lib/components.sh                                 # per-component install/uninstall (shared)
+install.sh                                        # CLI front-end
+crema-installer.sh                                # visual (yad) front-end
 color-schemes/Crema.colors                        # palette mapped to KDE color roles
 look-and-feel/com.cafeneurotico.crema.desktop/    # Global Theme package (+ splash/)
 desktoptheme/Crema/                               # Plasma desktop theme (pinned colors)
 konsole/Crema.{colorscheme,profile}              # terminal theme
 editor/crema.theme                                # KSyntaxHighlighting theme
+gtk/crema.css                                     # GTK4/libadwaita named-color overrides
+browsers/chromium/manifest.json                   # Chromium theme (load unpacked)
+browsers/firefox/userChrome.css                   # Firefox chrome recolor
 sddm/{crema-login.jpg,theme.conf.user,apply-sddm.sh}  # login screen (sudo, separate)
 fonts/Poppins-*.ttf                               # bundled interface font
-install.sh                                        # portable installer (user-level)
 ```
 
 ## Roadmap
 
-- **Phase 1 — done:** color scheme + Global Theme (Breeze recolored) + installer.
-- **Phase 2 — done:** Plasma desktop theme (pinned Crema palette; uses Breeze's
-  shapes recolored, so popup shadows render correctly), Konsole scheme, splash
-  screen, and editor syntax theme.
-- **SDDM login — done:** Crema background reskin of the breeze greeter, applied
-  separately with `sudo` (see above).
+- **Phase 1–2 — done:** color scheme, Global Theme, Plasma desktop theme, splash,
+  Konsole, editor theme.
+- **SDDM login — done:** background reskin, applied separately with `sudo`.
+- **Phase 3 — done:** component-based installer with a **visual (yad) front-end**;
+  Konsole/Yakuake set as default; **GTK4/libadwaita** colors (+ Flatpak access);
+  **Chromium & Firefox** browser theming.
 - **Later (optional):** a Kvantum application style — needs the Kvantum engine,
   not portable on atomic distros.
