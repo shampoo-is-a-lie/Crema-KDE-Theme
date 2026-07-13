@@ -1,0 +1,18 @@
+{
+    "KPackageStructure": "Plasma/LookAndFeel",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "joserobertoazevedo@gmail.com",
+                "Name": "Jose Roberto Azevedo"
+            }
+        ],
+        "Category": "",
+        "Description": "Warm espresso dark theme derived from the CafeNeurotico CREMA palette",
+        "Id": "com.cafeneurotico.crema.desktop",
+        "License": "GPLv2+",
+        "Name": "Crema",
+        "Version": "1.0",
+        "Website": ""
+    }
+}
