@@ -46,10 +46,30 @@ Or apply manually after installing: **System Settings → Colors & Themes →
 Global Theme → Crema**. The color scheme alone is also available under
 **Colors & Themes → Colors → Crema**.
 
+## Login screen (SDDM) — applied separately
+
+The login screen lives in a **system** directory, so it's kept out of the
+user-level `install.sh` and needs `sudo`. It's a low-risk **background reskin**
+of the already-working `01-breeze-fedora` greeter (Bazzite serves the greeter
+from a container image, so a from-scratch QML theme can't be shipped safely) —
+it changes only the login *background*, never the greeter logic, so it cannot
+break login.
+
+```bash
+sudo ./sddm/apply-sddm.sh            # apply the Crema login background
+sudo ./sddm/apply-sddm.sh --revert   # restore your previous background
+```
+
+It backs up your current `theme.conf.user` first. See it by logging out or
+rebooting. The background art (`sddm/crema-login.jpg`, 3440×1440) is espresso
+gradient + a faint coffee-cup watermark; regenerate at another size with any
+image tool if needed.
+
 ## Uninstall
 
 ```bash
-./install.sh --uninstall
+./install.sh --uninstall             # removes the user-level pieces
+sudo ./sddm/apply-sddm.sh --revert   # (if you applied the login screen)
 ```
 
 Then pick another Global Theme in System Settings to switch away. If you used
@@ -64,8 +84,9 @@ look-and-feel/com.cafeneurotico.crema.desktop/    # Global Theme package (+ spla
 desktoptheme/Crema/                               # Plasma desktop theme (colors + SVGs)
 konsole/Crema.{colorscheme,profile}              # terminal theme
 editor/crema.theme                                # KSyntaxHighlighting theme
+sddm/{crema-login.jpg,theme.conf.user,apply-sddm.sh}  # login screen (sudo, separate)
 fonts/Poppins-*.ttf                               # bundled interface font
-install.sh                                        # portable installer
+install.sh                                        # portable installer (user-level)
 ```
 
 ## Roadmap
@@ -73,5 +94,7 @@ install.sh                                        # portable installer
 - **Phase 1 — done:** color scheme + Global Theme (Breeze recolored) + installer.
 - **Phase 2 — done:** Plasma desktop theme (custom SVGs), Konsole scheme, splash
   screen, and editor syntax theme.
-- **Later (optional):** a Kvantum application style (needs the Kvantum engine —
-  not portable on atomic distros) and an SDDM login theme (touches system dirs).
+- **SDDM login — done:** Crema background reskin of the breeze greeter, applied
+  separately with `sudo` (see above).
+- **Later (optional):** a Kvantum application style — needs the Kvantum engine,
+  not portable on atomic distros.
