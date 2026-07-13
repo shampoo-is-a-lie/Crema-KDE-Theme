@@ -27,7 +27,7 @@ _restore()     { local f="$1"; if [[ -f "$f.pre-crema.bak" ]]; then mv "$f.pre-c
 
 # ---- Registry ---------------------------------------------------------------
 # Order matters (install order). GUI/CLI iterate this list.
-COMPONENTS=(colorscheme globaltheme desktoptheme konsole editor fonts fontapply gtk browser_chromium browser_firefox)
+COMPONENTS=(colorscheme globaltheme desktoptheme konsole editor fonts fontapply gtk browser_chromium browser_firefox launcher)
 declare -A COMP_LABEL COMP_DESC COMP_DEFAULT
 COMP_LABEL[colorscheme]="Color scheme";        COMP_DEFAULT[colorscheme]=TRUE
 COMP_DESC[colorscheme]="Crema palette for Plasma and all Qt/KDE apps"
@@ -49,6 +49,8 @@ COMP_LABEL[browser_chromium]="Chromium browsers"; COMP_DEFAULT[browser_chromium]
 COMP_DESC[browser_chromium]="Stage a Crema theme for Chrome/Brave (load unpacked, manual)"
 COMP_LABEL[browser_firefox]="Firefox";          COMP_DEFAULT[browser_firefox]=FALSE
 COMP_DESC[browser_firefox]="Apply a Crema userChrome.css to your Firefox profiles"
+COMP_LABEL[launcher]="App-menu launcher";       COMP_DEFAULT[launcher]=TRUE
+COMP_DESC[launcher]="Add 'Crema Installer' to your application menu (clickable)"
 
 # ---- Components -------------------------------------------------------------
 comp_colorscheme_install() {
@@ -180,6 +182,39 @@ comp_browser_firefox_uninstall() {
     [[ -d "$base" ]] || continue
     for prof in "$base"/*/; do rm -f "$prof/chrome/userChrome.css"; done
   done
+}
+
+comp_launcher_install() {
+  local appdir="$DATA_HOME/applications" desktop="$DATA_HOME/applications/crema-installer.desktop"
+  local icon="$CREMA_ROOT/icons/crema-installer.png"
+  cinfo "App-menu launcher -> $desktop"
+  mkdir -p "$appdir"
+  cat > "$desktop" <<EOF
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Crema Installer
+GenericName=Theme Installer
+Comment=Install the Crema espresso desktop theme
+Exec="$CREMA_ROOT/crema-installer.sh"
+Icon=$icon
+Terminal=false
+Categories=Settings;DesktopSettings;
+Keywords=crema;theme;espresso;coffee;
+EOF
+  chmod +x "$desktop"
+  command -v update-desktop-database >/dev/null 2>&1 && update-desktop-database "$appdir" >/dev/null 2>&1 || true
+  # Also drop a clickable icon on the Desktop, if there is one.
+  local deskdir; deskdir="$(xdg-user-dir DESKTOP 2>/dev/null || echo "$HOME/Desktop")"
+  if [[ -d "$deskdir" ]]; then
+    cp "$desktop" "$deskdir/crema-installer.desktop"; chmod +x "$deskdir/crema-installer.desktop"
+    cinfo "Desktop icon -> $deskdir/crema-installer.desktop (first click: choose 'Trust & run')"
+  fi
+}
+comp_launcher_uninstall() {
+  rm -f "$DATA_HOME/applications/crema-installer.desktop"
+  local deskdir; deskdir="$(xdg-user-dir DESKTOP 2>/dev/null || echo "$HOME/Desktop")"
+  rm -f "$deskdir/crema-installer.desktop"
 }
 
 # ---- Actions (not artifacts; handled separately by front-ends) --------------

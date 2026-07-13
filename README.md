@@ -31,6 +31,7 @@ reversible**. Copy this folder to any machine and run `./install.sh`.
 | GTK apps | GTK4/libadwaita colors (+ Flatpak read access); GTK3 is automatic | `gtk` |
 | Chromium (opt-in) | stage a Crema theme for Chrome/Brave (load unpacked) | `browser_chromium` |
 | Firefox (opt-in) | apply a Crema `userChrome.css` to your profiles | `browser_firefox` |
+| App launcher | add a clickable **Crema Installer** to the app menu + desktop | `launcher` |
 
 Window decoration/style stays **Breeze** recolored (rounded in Plasma 6). Notes:
 **does not change your wallpaper**; a fully custom Qt widget style would need the
@@ -38,11 +39,16 @@ Kvantum engine (not portable on atomic distros). Login screen is separate (below
 
 ## Install
 
-The easiest way is the **visual installer** — a checklist to pick components:
+The easiest way is the **visual installer** — an espresso-themed checklist
+(rendered with `yad`, styled by `lib/installer.css`) to pick components:
 
 ```bash
 ./install.sh --gui
 ```
+
+After the first run, the `launcher` component adds a clickable **Crema Installer**
+to your application menu and Desktop, so you can reopen the GUI without a terminal
+(first Desktop click: choose *Trust & run*).
 
 Or the CLI:
 
@@ -92,6 +98,8 @@ their `*.pre-crema.bak`). Then pick another Global Theme in System Settings.
 
 ```
 lib/components.sh                                 # per-component install/uninstall (shared)
+lib/installer.css                                 # Crema styling for the yad installer
+icons/crema-installer.png                         # installer / launcher icon
 install.sh                                        # CLI front-end
 crema-installer.sh                                # visual (yad) front-end
 color-schemes/Crema.colors                        # palette mapped to KDE color roles
@@ -111,8 +119,9 @@ fonts/Poppins-*.ttf                               # bundled interface font
 - **Phase 1–2 — done:** color scheme, Global Theme, Plasma desktop theme, splash,
   Konsole, editor theme.
 - **SDDM login — done:** background reskin, applied separately with `sudo`.
-- **Phase 3 — done:** component-based installer with a **visual (yad) front-end**;
-  Konsole/Yakuake set as default; **GTK4/libadwaita** colors (+ Flatpak access);
-  **Chromium & Firefox** browser theming.
+- **Phase 3 — done:** component-based installer with an espresso-themed **visual
+  (yad) front-end** + clickable menu/desktop launcher; Konsole/Yakuake set as
+  default; **GTK4/libadwaita** colors (+ Flatpak access); **Chromium & Firefox**
+  browser theming.
 - **Later (optional):** a Kvantum application style — needs the Kvantum engine,
   not portable on atomic distros.

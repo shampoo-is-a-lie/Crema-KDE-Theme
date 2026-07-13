@@ -1,0 +1,44 @@
+/* Crema — GTK CSS for the yad installer window (passed via yad --css).
+   Makes the installer espresso-themed even before the GTK theme is Crema. */
+
+window, dialog            { background-color: #2C1E16; color: #FFE6A7; }
+label, .view, checkbutton { color: #FFE6A7; }
+
+/* the component checklist */
+treeview.view, treeview, list, textview text {
+    background-color: #241811;
+    color: #FFE6A7;
+}
+treeview.view:selected, treeview:selected,
+list row:selected, row:selected, .view:selected {
+    background-color: #D4A373;
+    color: #241811;
+}
+treeview.view:hover, list row:hover { background-color: #3A2A1E; }
+
+/* buttons */
+button {
+    background-image: none;
+    background-color: #432818;
+    color: #FFE6A7;
+    border: 1px solid #8B5A2B;
+    border-radius: 8px;
+    padding: 5px 14px;
+}
+button:hover           { background-color: #D4A373; color: #241811; }
+button:active,
+button:checked         { background-color: #B5875A; color: #241811; }
+button:focus           { border-color: #D4A373; }
+
+/* progress + inputs */
+progressbar trough           { background-color: #241811; border: 1px solid #8B5A2B; }
+progressbar progress         { background-color: #D4A373; background-image: none; }
+entry                        { background-color: #241811; color: #FFE6A7;
+                               border: 1px solid #8B5A2B; border-radius: 6px; }
+entry:focus                  { border-color: #D4A373; }
+
+/* accents / chrome */
+check:checked, radio:checked { background-color: #D4A373; }
+headerbar                    { background-color: #432818; color: #FFE6A7; }
+tooltip                      { background-color: #432818; color: #FFE6A7; }
+separator                    { background-color: #8B5A2B; }

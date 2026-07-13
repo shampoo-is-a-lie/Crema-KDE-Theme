@@ -15,7 +15,12 @@ if ! command -v yad >/dev/null 2>&1; then
   exit 1
 fi
 
-LOGO="$CREMA_ROOT/look-and-feel/$LNF_ID/contents/splash/images/logo.svg"
+ICON="$CREMA_ROOT/icons/crema-installer.png"
+[[ -f "$ICON" ]] || ICON="$CREMA_ROOT/look-and-feel/$LNF_ID/contents/splash/images/logo.svg"
+LOGO="$ICON"
+# Crema-theme the installer window itself (works even before the GTK theme is Crema).
+CSS="$CREMA_ROOT/lib/installer.css"
+css_arg=(); [[ -f "$CSS" ]] && css_arg=(--css="$CSS")
 
 # Build checklist rows: CHK  Component  Description  id(hidden)
 rows=()
@@ -26,7 +31,7 @@ done
 rows+=( TRUE  "Apply Crema now"     "Switch the desktop to Crema after installing"        "__apply__" )
 rows+=( FALSE "Login screen (SDDM)" "Crema login background — asks for your password"     "__sddm__"  )
 
-selected="$(yad --list --checklist \
+selected="$(yad "${css_arg[@]}" --list --checklist \
   --title "Crema Installer" \
   --window-icon="$LOGO" --image="$LOGO" \
   --width=760 --height=560 \
@@ -48,7 +53,7 @@ while IFS= read -r id; do
 done <<< "$selected"
 
 if [[ ${#todo[@]} -eq 0 && $do_apply -eq 0 && $do_sddm -eq 0 ]]; then
-  yad --info --title="Crema" --image="$LOGO" --text="Nothing selected." --button=OK:0
+  yad "${css_arg[@]}" --info --title="Crema" --image="$LOGO" --text="Nothing selected." --button=OK:0
   exit 0
 fi
 
@@ -62,7 +67,7 @@ fi
   done
   if [[ $do_apply -eq 1 ]]; then echo "# Applying Crema…"; crema_apply || true; fi
   echo "100"
-} | yad --progress --auto-close --auto-kill --title="Installing Crema" \
+} | yad "${css_arg[@]}" --progress --auto-close --auto-kill --title="Installing Crema" \
         --window-icon="$LOGO" --width=460 --text="Starting…" --percentage=0
 
 # Optional login screen (needs root)
@@ -85,6 +90,6 @@ for c in "${todo[@]}"; do
   esac
 done
 
-yad --info --title="Crema — done" --image="$LOGO" --width=540 \
+yad "${css_arg[@]}" --info --title="Crema — done" --image="$LOGO" --width=540 \
     --text="<b>Installed:</b> ${todo[*]:-（none）}${notes}${sddm_note}\n\nManage anytime with ./install.sh --uninstall." \
     --button=OK:0 || true
