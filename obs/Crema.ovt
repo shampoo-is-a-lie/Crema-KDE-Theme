@@ -17,10 +17,10 @@
     --text_muted: #A47148;
     --text_disabled: #7A5838;
 
-    --primary: #C0925E;
+    --primary: #8B5A2B;
     --primary_light: #D4A373;
     --primary_lighter: #E0B584;
-    --primary_dark: #8B5A2B;
+    --primary_dark: #5A3D24;
 
     --input_bg: #241811;
     --input_bg_hover: #35251A;
@@ -30,7 +30,7 @@
 
     --button_bg: #432818;
     --button_bg_hover: #56341F;
-    --button_bg_down: #C0925E;
+    --button_bg_down: #8B5A2B;
     --button_border: #8B5A2B;
 
     --border_color: #5A3D24;
