@@ -68,28 +68,27 @@ You can also apply manually: **System Settings → Colors & Themes → Global Th
 
 Browser theming is uneven by nature — here's the honest state per browser:
 
-- **Brave** — set *Settings → Appearance → Qt* and it follows the Crema color
-  scheme perfectly. Nothing to install. **Recommended browser for Crema.**
-- **Firefox** — the bundled `userChrome.css` (`browser_firefox`) only lightly
-  recolors the chrome. For a proper look, use a Firefox color-theme add-on
-  (e.g. *Blue Coffee*) — that's the better route.
-- **Chromium / Chrome** — the `browser_chromium` component stages an unpacked
-  theme you load via *Extensions → Developer mode → Load unpacked* (works for
-  Flatpak Chrome, but static).
+- **Chrome / Brave / Chromium** — the `browser_chromium` component sets Chromium's
+  built-in **"Orange" dark theme** (a warm palette that fits Crema) by writing the
+  `Preferences` theme block. Works for **Flatpak and native**, no managed policy
+  needed. **Close the browser first** — Chromium rewrites `Preferences` on exit, so
+  the component skips any running browser and tells you to close it and re-run.
+  (Note: Chrome PWAs count as "Chrome running".)
+- **Brave** — the Orange theme applies here too; alternatively *Settings → Appearance
+  → Qt* makes Brave follow the Crema color scheme.
+- **Firefox** — themes are installed **add-ons**, not a settable value, so the
+  installer can't set one for you the way it sets Chrome's Orange. Use a color-theme
+  add-on from AMO (e.g. *Blue Coffee*); the bundled `userChrome.css` only lightly
+  recolors the chrome.
 
-**Real-time Chrome theming (Omarchy method).** Omarchy recolors Chromium instantly
-using a `BrowserThemeColor` **managed policy** + `--refresh-platform-policy`:
-
-```bash
-sudo ./browsers/apply-chrome-policy.sh            # seed #2C1E16 (or pass a hex)
-sudo ./browsers/apply-chrome-policy.sh --revert
-```
-
-This is the cohesive, real-time approach — **but managed policies live under
-`/etc` and are read only by *native* Chromium/Chrome/Brave/Edge. Flatpak browsers
-are sandboxed and cannot read them** ([flatpak#4709](https://github.com/flatpak/flatpak/issues/4709)),
-so it can't theme a Flatpak Chrome. For a Flatpak setup, use **Brave + Qt** (best),
-the unpacked Chromium theme, or install a native Chromium.
+**Alternative — native real-time theming (Omarchy method).** For *native* (non-Flatpak)
+Chromium/Chrome/Brave/Edge, `browsers/apply-chrome-policy.sh` (sudo) writes a
+`BrowserThemeColor` managed policy + `--refresh-platform-policy` for instant,
+policy-driven theming. Flatpak browsers can't read managed policies
+([flatpak#4709](https://github.com/flatpak/flatpak/issues/4709)), which is why the
+Preferences method above is the default. A custom-caramel unpacked theme
+(`browsers/chromium/manifest.json`, load via *Extensions → Developer mode → Load
+unpacked*) is also available if you prefer Crema's own colors over Orange.
 
 ## Login screen (SDDM) — applied separately
 
@@ -137,7 +136,9 @@ konsole/Crema.{colorscheme,profile}              # terminal theme
 editor/crema.theme                                # KSyntaxHighlighting theme
 obs/Crema.ovt                                      # OBS Studio variant theme
 gtk/crema.css                                     # GTK4/libadwaita named-color overrides
-browsers/chromium/manifest.json                   # Chromium theme (load unpacked)
+browsers/chrome-theme.json                        # Chrome/Brave built-in "Orange" theme block
+browsers/set-chrome-theme.py                      # merges/resets the Preferences theme block
+browsers/chromium/manifest.json                   # optional custom-caramel theme (load unpacked)
 browsers/firefox/userChrome.css                   # Firefox chrome recolor
 browsers/apply-chrome-policy.sh                   # native Chrome real-time theming (sudo)
 sddm/{crema-login.jpg,theme.conf.user,apply-sddm.sh}  # login screen (sudo, separate)

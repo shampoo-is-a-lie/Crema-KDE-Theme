@@ -1,0 +1,19 @@
+{
+  "browser": {
+    "theme": {
+      "color_scheme": 2,
+      "color_scheme2": 2,
+      "color_variant": 1,
+      "color_variant2": 1,
+      "saved_local_theme": "CAAQAEgB",
+      "user_color": -32768,
+      "user_color2": -32768
+    }
+  },
+  "extensions": {
+    "theme": {
+      "id": "user_color_theme_id",
+      "system_theme": 0
+    }
+  }
+}

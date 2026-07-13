@@ -48,7 +48,7 @@ COMP_DESC[fontapply]="Use Poppins for the interface (titlebar SemiBold); backs u
 COMP_LABEL[gtk]="GTK apps";                     COMP_DEFAULT[gtk]=TRUE
 COMP_DESC[gtk]="GTK4/libadwaita Crema colors (+ let Flatpaks read them). GTK3 is automatic."
 COMP_LABEL[browser_chromium]="Chromium browsers"; COMP_DEFAULT[browser_chromium]=FALSE
-COMP_DESC[browser_chromium]="Stage a Crema theme for Chrome/Brave (load unpacked, manual)"
+COMP_DESC[browser_chromium]="Set the built-in 'Orange' dark theme in Chrome/Brave/Chromium (close them first)"
 COMP_LABEL[browser_firefox]="Firefox";          COMP_DEFAULT[browser_firefox]=FALSE
 COMP_DESC[browser_firefox]="Apply a Crema userChrome.css to your Firefox profiles"
 COMP_LABEL[launcher]="App-menu launcher";       COMP_DEFAULT[launcher]=TRUE
@@ -166,13 +166,36 @@ comp_gtk_uninstall() {
     flatpak override --user --nofilesystem=xdg-config/gtk-4.0 --nofilesystem=xdg-config/gtk-3.0 >/dev/null 2>&1 || true
 }
 
+_CHROMIUM_UDS=(
+  "$HOME/.var/app/com.google.Chrome/config/google-chrome|com.google.Chrome"
+  "$HOME/.var/app/com.brave.Browser/config/BraveSoftware/Brave-Browser|com.brave.Browser"
+  "$HOME/.var/app/io.github.ungoogled_software.ungoogled_chromium/config/chromium|ungoogled_chromium"
+  "$HOME/.config/google-chrome|google-chrome"
+  "$HOME/.config/chromium|chromium"
+  "$HOME/.config/BraveSoftware/Brave-Browser|brave"
+)
 comp_browser_chromium_install() {
-  local dst="$STAGE_DIR/chromium-theme"
-  mkdir -p "$dst"; cp "$CREMA_ROOT/browsers/chromium/manifest.json" "$dst/"
-  cinfo "Chromium theme staged -> $dst"
-  cinfo "Load it per browser: menu > Extensions > enable Developer mode > 'Load unpacked' > pick $dst"
+  # Set the built-in "Orange" dark theme by writing the Preferences theme block.
+  # Works for Flatpak (no managed policy needed). Skips running browsers, since
+  # Chromium rewrites Preferences on exit and would lose the change.
+  local frag="$CREMA_ROOT/browsers/chrome-theme.json" setter="$CREMA_ROOT/browsers/set-chrome-theme.py"
+  local e ud pat pref applied=0 skipped=""
+  for e in "${_CHROMIUM_UDS[@]}"; do
+    ud="${e%%|*}"; pat="${e##*|}"; pref="$ud/Default/Preferences"
+    [[ -f "$pref" ]] || continue
+    if pgrep -f "$pat" >/dev/null 2>&1; then skipped+=" ${pat}"; continue; fi
+    python3 "$setter" apply "$pref" "$frag" && { cinfo "Orange theme -> ${pref/#$HOME/\~}"; applied=$((applied+1)); }
+  done
+  [[ -n "$skipped" ]] && cinfo "skipped (running — close them & re-run --only=browser_chromium):$skipped"
+  [[ $applied -gt 0 || -n "$skipped" ]] || cinfo "no Chrome/Brave/Chromium profile found (open it once, then re-run)"
 }
-comp_browser_chromium_uninstall() { rm -rf "$STAGE_DIR/chromium-theme"; }
+comp_browser_chromium_uninstall() {
+  local setter="$CREMA_ROOT/browsers/set-chrome-theme.py" e pref
+  for e in "${_CHROMIUM_UDS[@]}"; do
+    pref="${e%%|*}/Default/Preferences"
+    [[ -f "$pref" ]] && ! pgrep -f "${e##*|}" >/dev/null 2>&1 && python3 "$setter" reset "$pref" 2>/dev/null || true
+  done
+}
 
 comp_browser_firefox_install() {
   local css="$CREMA_ROOT/browsers/firefox/userChrome.css" applied=0 root prof base
