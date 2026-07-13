@@ -1,0 +1,39 @@
+@OBSThemeMeta {
+    name: 'Crema';
+    id: 'com.cafeneurotico.crema.obs';
+    extends: 'com.obsproject.Yami';
+    author: 'Jose Roberto Azevedo';
+    dark: 'true';
+}
+
+/* Crema — espresso variant of Yami. Overrides Yami's colour variables. */
+@OBSThemeVars {
+    --bg_window: #2C1E16;
+    --bg_base: #241811;
+    --bg_preview: #1A1009;
+
+    --text: #FFE6A7;
+    --text_light: #FFF3D0;
+    --text_muted: #A47148;
+    --text_disabled: #7A5838;
+
+    --primary: #C0925E;
+    --primary_light: #D4A373;
+    --primary_lighter: #E0B584;
+    --primary_dark: #8B5A2B;
+
+    --input_bg: #241811;
+    --input_bg_hover: #35251A;
+    --input_bg_focus: #35251A;
+    --input_border: #5A3D24;
+    --input_border_focus: #D4A373;
+
+    --button_bg: #432818;
+    --button_bg_hover: #56341F;
+    --button_bg_down: #C0925E;
+    --button_border: #8B5A2B;
+
+    --border_color: #5A3D24;
+    --warning: #E8A23D;
+    --danger: #E07856;
+}

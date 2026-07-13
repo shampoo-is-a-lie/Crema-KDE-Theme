@@ -27,7 +27,7 @@ _restore()     { local f="$1"; if [[ -f "$f.pre-crema.bak" ]]; then mv "$f.pre-c
 
 # ---- Registry ---------------------------------------------------------------
 # Order matters (install order). GUI/CLI iterate this list.
-COMPONENTS=(colorscheme globaltheme desktoptheme konsole editor fonts fontapply gtk browser_chromium browser_firefox launcher)
+COMPONENTS=(colorscheme globaltheme desktoptheme konsole editor obs fonts fontapply gtk browser_chromium browser_firefox launcher)
 declare -A COMP_LABEL COMP_DESC COMP_DEFAULT
 COMP_LABEL[colorscheme]="Color scheme";        COMP_DEFAULT[colorscheme]=TRUE
 COMP_DESC[colorscheme]="Crema palette for Plasma and all Qt/KDE apps"
@@ -39,6 +39,8 @@ COMP_LABEL[konsole]="Konsole / Yakuake";        COMP_DEFAULT[konsole]=TRUE
 COMP_DESC[konsole]="Terminal color scheme + profile, set as the default"
 COMP_LABEL[editor]="Editor syntax theme";       COMP_DEFAULT[editor]=TRUE
 COMP_DESC[editor]="Crema colors for Kate / KWrite / KDevelop"
+COMP_LABEL[obs]="OBS Studio";                   COMP_DEFAULT[obs]=TRUE
+COMP_DESC[obs]="Crema variant theme for OBS (Settings > Appearance > Crema)"
 COMP_LABEL[fonts]="Bundled fonts";              COMP_DEFAULT[fonts]=TRUE
 COMP_DESC[fonts]="Install the Poppins font family"
 COMP_LABEL[fontapply]="Set Poppins as UI font"; COMP_DEFAULT[fontapply]=FALSE
@@ -96,6 +98,23 @@ comp_editor_install() {
   mkdir -p "$EDITOR_DIR"; cp "$CREMA_ROOT/editor/crema.theme" "$EDITOR_DIR/"
 }
 comp_editor_uninstall() { rm -f "$EDITOR_DIR/crema.theme"; }
+
+comp_obs_install() {
+  # OBS 30+ variant theme (.ovt). Install to whichever OBS config dir exists.
+  local base done=0
+  for base in "$CONF_HOME/obs-studio" "$HOME/.var/app/com.obsproject.Studio/config/obs-studio"; do
+    [[ -d "$base" ]] || continue
+    mkdir -p "$base/themes"; cp "$CREMA_ROOT/obs/Crema.ovt" "$base/themes/"; done=1
+    cinfo "OBS theme -> $base/themes/Crema.ovt"
+  done
+  [[ $done -eq 1 ]] || cinfo "OBS config not found (open OBS once, then re-run --only=obs)"
+}
+comp_obs_uninstall() {
+  local base
+  for base in "$CONF_HOME/obs-studio" "$HOME/.var/app/com.obsproject.Studio/config/obs-studio"; do
+    rm -f "$base/themes/Crema.ovt"
+  done
+}
 
 comp_fonts_install() {
   cinfo "Poppins fonts -> $FONT_DIR"

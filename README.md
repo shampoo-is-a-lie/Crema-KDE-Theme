@@ -26,6 +26,7 @@ reversible**. Copy this folder to any machine and run `./install.sh`.
 | Plasma desktop theme | pinned Crema palette (Breeze shapes recolored) | `desktoptheme` |
 | Konsole / Yakuake | terminal scheme + profile, **set as the default** | `konsole` |
 | Editor theme | Kate/KWrite/KDevelop syntax colors | `editor` |
+| OBS Studio | Crema `.ovt` variant theme (OBS 30+) | `obs` |
 | Bundled fonts | install the Poppins family | `fonts` |
 | UI font (opt-in) | set Poppins as the interface font, titlebar SemiBold | `fontapply` |
 | GTK apps | GTK4/libadwaita colors (+ Flatpak read access); GTK3 is automatic | `gtk` |
@@ -62,6 +63,33 @@ Or the CLI:
 ```
 
 You can also apply manually: **System Settings → Colors & Themes → Global Theme → Crema**.
+
+## Browsers
+
+Browser theming is uneven by nature — here's the honest state per browser:
+
+- **Brave** — set *Settings → Appearance → Qt* and it follows the Crema color
+  scheme perfectly. Nothing to install. **Recommended browser for Crema.**
+- **Firefox** — the bundled `userChrome.css` (`browser_firefox`) only lightly
+  recolors the chrome. For a proper look, use a Firefox color-theme add-on
+  (e.g. *Blue Coffee*) — that's the better route.
+- **Chromium / Chrome** — the `browser_chromium` component stages an unpacked
+  theme you load via *Extensions → Developer mode → Load unpacked* (works for
+  Flatpak Chrome, but static).
+
+**Real-time Chrome theming (Omarchy method).** Omarchy recolors Chromium instantly
+using a `BrowserThemeColor` **managed policy** + `--refresh-platform-policy`:
+
+```bash
+sudo ./browsers/apply-chrome-policy.sh            # seed #2C1E16 (or pass a hex)
+sudo ./browsers/apply-chrome-policy.sh --revert
+```
+
+This is the cohesive, real-time approach — **but managed policies live under
+`/etc` and are read only by *native* Chromium/Chrome/Brave/Edge. Flatpak browsers
+are sandboxed and cannot read them** ([flatpak#4709](https://github.com/flatpak/flatpak/issues/4709)),
+so it can't theme a Flatpak Chrome. For a Flatpak setup, use **Brave + Qt** (best),
+the unpacked Chromium theme, or install a native Chromium.
 
 ## Login screen (SDDM) — applied separately
 
@@ -107,9 +135,11 @@ look-and-feel/com.cafeneurotico.crema.desktop/    # Global Theme package (+ spla
 desktoptheme/Crema/                               # Plasma desktop theme (pinned colors)
 konsole/Crema.{colorscheme,profile}              # terminal theme
 editor/crema.theme                                # KSyntaxHighlighting theme
+obs/Crema.ovt                                      # OBS Studio variant theme
 gtk/crema.css                                     # GTK4/libadwaita named-color overrides
 browsers/chromium/manifest.json                   # Chromium theme (load unpacked)
 browsers/firefox/userChrome.css                   # Firefox chrome recolor
+browsers/apply-chrome-policy.sh                   # native Chrome real-time theming (sudo)
 sddm/{crema-login.jpg,theme.conf.user,apply-sddm.sh}  # login screen (sudo, separate)
 fonts/Poppins-*.ttf                               # bundled interface font
 ```
@@ -122,6 +152,6 @@ fonts/Poppins-*.ttf                               # bundled interface font
 - **Phase 3 — done:** component-based installer with an espresso-themed **visual
   (yad) front-end** + clickable menu/desktop launcher; Konsole/Yakuake set as
   default; **GTK4/libadwaita** colors (+ Flatpak access); **Chromium & Firefox**
-  browser theming.
+  browser theming; **OBS Studio** theme; native-Chrome real-time policy theming.
 - **Later (optional):** a Kvantum application style — needs the Kvantum engine,
   not portable on atomic distros.
