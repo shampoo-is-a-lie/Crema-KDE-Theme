@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <!-- Crema — espresso cup mark -->
+  <g fill="none" stroke="#D4A373" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+    <!-- steam -->
+    <path d="M104 44 C104 34 94 32 94 22 C94 14 100 12 100 4" stroke="#E6CC98" opacity="0.85"/>
+    <path d="M132 46 C132 36 122 34 122 24 C122 16 128 14 128 6" stroke="#E6CC98" opacity="0.7"/>
+    <path d="M160 44 C160 34 150 32 150 22 C150 14 156 12 156 4" stroke="#E6CC98" opacity="0.85"/>
+  </g>
+  <!-- cup body -->
+  <path d="M60 84 h112 v40 a56 56 0 0 1 -112 0 z" fill="#432818" stroke="#D4A373" stroke-width="9" stroke-linejoin="round"/>
+  <!-- crema surface -->
+  <ellipse cx="116" cy="86" rx="52" ry="12" fill="#D4A373"/>
+  <ellipse cx="116" cy="85" rx="38" ry="8" fill="#FFE6A7" opacity="0.85"/>
+  <!-- handle -->
+  <path d="M172 92 a30 30 0 0 1 0 52" fill="none" stroke="#D4A373" stroke-width="9" stroke-linecap="round"/>
+  <!-- saucer -->
+  <path d="M44 176 h144" stroke="#8B5A2B" stroke-width="9" stroke-linecap="round" fill="none"/>
+  <ellipse cx="116" cy="176" rx="86" ry="16" fill="none" stroke="#A47148" stroke-width="7" opacity="0.6"/>
+</svg>

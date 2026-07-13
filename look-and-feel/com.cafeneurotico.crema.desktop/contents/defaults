@@ -8,7 +8,7 @@ ColorScheme=Crema
 Theme=breeze-dark
 
 [plasmarc][Theme]
-name=default
+name=Crema
 
 [kcminputrc][Mouse]
 cursorTheme=breeze_cursors
@@ -18,4 +18,4 @@ library=org.kde.breeze
 theme=Breeze
 
 [ksplashrc][KSplash]
-Theme=org.kde.breeze.desktop
+Theme=com.cafeneurotico.crema.desktop

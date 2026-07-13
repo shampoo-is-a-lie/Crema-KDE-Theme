@@ -21,6 +21,9 @@ DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 CONF_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
 COLOR_DIR="$DATA_HOME/color-schemes"
 LNF_DIR="$DATA_HOME/plasma/look-and-feel"
+DESKTOPTHEME_DIR="$DATA_HOME/plasma/desktoptheme"
+KONSOLE_DIR="$DATA_HOME/konsole"
+EDITOR_DIR="$DATA_HOME/org.kde.syntax-highlighting/themes"
 FONT_DIR="$DATA_HOME/fonts/Crema"
 LNF_ID="com.cafeneurotico.crema.desktop"
 
@@ -42,6 +45,9 @@ if [[ $UNINSTALL -eq 1 ]]; then
   info "Removing Crema theme files..."
   rm -f  "$COLOR_DIR/Crema.colors"
   rm -rf "$LNF_DIR/$LNF_ID"
+  rm -rf "$DESKTOPTHEME_DIR/Crema"
+  rm -f  "$KONSOLE_DIR/Crema.colorscheme" "$KONSOLE_DIR/Crema.profile"
+  rm -f  "$EDITOR_DIR/crema.theme"
   rm -rf "$FONT_DIR"
   fc-cache -f "$DATA_HOME/fonts" >/dev/null 2>&1 || true
   info "Done. Crema files removed."
@@ -58,6 +64,19 @@ info "Installing global theme -> $LNF_DIR/$LNF_ID"
 mkdir -p "$LNF_DIR"
 rm -rf "$LNF_DIR/$LNF_ID"
 cp -r "$SCRIPT_DIR/look-and-feel/$LNF_ID" "$LNF_DIR/"
+
+info "Installing Plasma desktop theme -> $DESKTOPTHEME_DIR/Crema"
+mkdir -p "$DESKTOPTHEME_DIR"
+rm -rf "$DESKTOPTHEME_DIR/Crema"
+cp -r "$SCRIPT_DIR/desktoptheme/Crema" "$DESKTOPTHEME_DIR/"
+
+info "Installing Konsole scheme + profile -> $KONSOLE_DIR"
+mkdir -p "$KONSOLE_DIR"
+cp "$SCRIPT_DIR/konsole/Crema.colorscheme" "$SCRIPT_DIR/konsole/Crema.profile" "$KONSOLE_DIR/"
+
+info "Installing editor (KSyntaxHighlighting) theme -> $EDITOR_DIR/crema.theme"
+mkdir -p "$EDITOR_DIR"
+cp "$SCRIPT_DIR/editor/crema.theme" "$EDITOR_DIR/"
 
 info "Installing Poppins fonts -> $FONT_DIR"
 mkdir -p "$FONT_DIR"
@@ -99,6 +118,7 @@ if [[ $APPLY -eq 1 ]]; then
     lookandfeeltool -a "$LNF_ID" || true
   fi
   command -v plasma-apply-colorscheme >/dev/null 2>&1 && plasma-apply-colorscheme Crema || true
+  command -v plasma-apply-desktoptheme >/dev/null 2>&1 && plasma-apply-desktoptheme Crema || true
 fi
 
 echo

@@ -11,19 +11,28 @@ scheme used across the CafeNeurotico projects.
 | Text | `#FFE6A7` | warm cream |
 | Border | `#8B5A2B` | walnut |
 
-## What this is (Phase 1)
+## What this is
 
-A **portable, user-level** Global Theme. It:
+A **portable, user-level** KDE theme. Everything installs into your home
+(`~/.local/share`, `~/.config`) — **no root, no system files touched, fully
+reversible**. Copy this folder to any machine and run `./install.sh`.
 
-- installs entirely into your home (`~/.local/share`, `~/.config`) — **no root, no
-  system files touched, fully reversible**;
-- ships a **Crema color scheme** that recolors Plasma and Breeze apps;
-- uses the built-in **Breeze** widget style + window decoration (already
-  rounded in Plasma 6) recolored by the scheme;
-- bundles the **Poppins** font (optional to enable; titlebar uses Poppins SemiBold);
-- **does not change your wallpaper**.
+**Components**
 
-Copy this folder to any machine and run `./install.sh` — that's the whole thing.
+| Piece | What it does | Installs to |
+|-------|--------------|-------------|
+| Color scheme | Crema palette across Plasma + Breeze apps | `color-schemes/Crema.colors` |
+| Global Theme | bundles the below as one selectable theme | `plasma/look-and-feel/com.cafeneurotico.crema.desktop/` |
+| Plasma desktop theme | pinned-Crema panel/widget/tooltip SVGs | `plasma/desktoptheme/Crema/` |
+| Window style/deco | built-in **Breeze** recolored (rounded in Plasma 6) | — |
+| Splash screen | espresso boot splash with a coffee-cup mark | inside the Global Theme |
+| Konsole | terminal color scheme + profile | `konsole/Crema.*` |
+| Editor theme | Kate/KWrite/KDevelop syntax colors | `org.kde.syntax-highlighting/themes/crema.theme` |
+| Font (optional) | **Poppins**, titlebar SemiBold | `fonts/Crema/` + `--font` |
+
+Notes: **does not change your wallpaper**; the widget style stays Breeze
+(a fully custom Qt style would need the Kvantum engine, which can't be shipped
+portably and would require system layering on atomic distros).
 
 ## Install
 
@@ -50,14 +59,19 @@ Then pick another Global Theme in System Settings to switch away. If you used
 ## Layout
 
 ```
-color-schemes/Crema.colors                        # the palette mapped to KDE roles
-look-and-feel/com.cafeneurotico.crema.desktop/    # the Global Theme package
-fonts/Poppins-*.ttf                               # bundled interface font (Regular/Medium/SemiBold/Bold)
+color-schemes/Crema.colors                        # palette mapped to KDE color roles
+look-and-feel/com.cafeneurotico.crema.desktop/    # Global Theme package (+ splash/)
+desktoptheme/Crema/                               # Plasma desktop theme (colors + SVGs)
+konsole/Crema.{colorscheme,profile}              # terminal theme
+editor/crema.theme                                # KSyntaxHighlighting theme
+fonts/Poppins-*.ttf                               # bundled interface font
 install.sh                                        # portable installer
 ```
 
 ## Roadmap
 
-- **Phase 2 (optional):** a bespoke Kvantum application style and a recolored
-  Plasma desktop theme (custom panel/widget SVGs) for a fully custom look,
-  plus an optional SDDM login theme.
+- **Phase 1 — done:** color scheme + Global Theme (Breeze recolored) + installer.
+- **Phase 2 — done:** Plasma desktop theme (custom SVGs), Konsole scheme, splash
+  screen, and editor syntax theme.
+- **Later (optional):** a Kvantum application style (needs the Kvantum engine —
+  not portable on atomic distros) and an SDDM login theme (touches system dirs).

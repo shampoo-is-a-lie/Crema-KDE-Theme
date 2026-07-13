@@ -1,0 +1,17 @@
+{
+    "KPackageStructure": "Plasma/Theme",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "joserobertoazevedo@gmail.com",
+                "Name": "Jose Roberto Azevedo"
+            }
+        ],
+        "Description": "Warm espresso Plasma style from the CafeNeurotico CREMA palette",
+        "Id": "Crema",
+        "License": "GPLv2+",
+        "Name": "Crema",
+        "Version": "1.0"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}
