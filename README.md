@@ -32,7 +32,7 @@ reversible**. Copy this folder to any machine and run `./install.sh`.
 | GTK apps | GTK4/libadwaita colors (+ Flatpak read access); GTK3 is automatic | `gtk` |
 | Chromium (opt-in) | stage a Crema theme for Chrome/Brave (load unpacked) | `browser_chromium` |
 | Firefox (opt-in) | apply a Crema `userChrome.css` to your profiles | `browser_firefox` |
-| App launcher | add a clickable **Crema Installer** to the app menu + desktop | `launcher` |
+| App launcher | add a clickable **CREMA Desktop Theme Installer** to the app menu + desktop | `launcher` |
 
 Window decoration/style stays **Breeze** recolored (rounded in Plasma 6). Notes:
 **does not change your wallpaper**; a fully custom Qt widget style would need the
@@ -47,7 +47,7 @@ The easiest way is the **visual installer** — an espresso-themed checklist
 ./install.sh --gui
 ```
 
-After the first run, the `launcher` component adds a clickable **Crema Installer**
+After the first run, the `launcher` component adds a clickable **CREMA Desktop Theme Installer**
 to your application menu and Desktop, so you can reopen the GUI without a terminal
 (first Desktop click: choose *Trust & run*).
 
@@ -109,7 +109,20 @@ rebooting. The background art (`sddm/crema-login.jpg`, 3440×1440) is espresso
 gradient + a faint coffee-cup watermark; regenerate at another size with any
 image tool if needed.
 
+## Reset to system default
+
+The quickest way back: the visual installer's **Reset to Default** button (or
+`./install.sh --reset`). It switches your desktop back to the KDE default
+(**Breeze**) and then removes every file Crema installed — all user-level, no
+password, and your panel layout is left untouched.
+
+```bash
+./install.sh --reset                 # back to Breeze + remove everything Crema
+```
+
 ## Uninstall
+
+To only remove files (without switching your active theme):
 
 ```bash
 ./install.sh --uninstall             # removes the default set
@@ -120,6 +133,10 @@ sudo ./sddm/apply-sddm.sh --revert   # (if you applied the login screen)
 
 Uninstall restores files it backed up (e.g. `kdeglobals`, `gtk-4.0/gtk.css` from
 their `*.pre-crema.bak`). Then pick another Global Theme in System Settings.
+
+The login screen (SDDM) is the one thing that lives outside your home folder, so
+it reverts separately with `sudo ./sddm/apply-sddm.sh --revert`. Neither
+`--reset` nor the GUI button ever touches it.
 
 ## Layout
 

@@ -31,15 +31,37 @@ done
 rows+=( TRUE  "Apply Crema now"     "Switch the desktop to Crema after installing"        "__apply__" )
 rows+=( FALSE "Login screen (SDDM)" "Crema login background — asks for your password"     "__sddm__"  )
 
+set +e
 selected="$(yad "${css_arg[@]}" --list --checklist \
-  --title "Crema Installer" \
-  --window-icon="$LOGO" --image="$LOGO" \
+  --title "CREMA Desktop Theme Installer" \
+  --window-icon="$LOGO" \
   --width=760 --height=560 \
   --text="<b>Crema</b> — espresso desktop theme\nChoose what to install. Everything is user-level and reversible." \
   --column="Install:CHK" --column="Component:TEXT" --column="Description:TEXT" --column="id:HD" \
   --hide-column=4 --print-column=4 --separator="\n" \
-  --button="Cancel:1" --button="Install:0" \
-  "${rows[@]}")" || { echo "Cancelled."; exit 0; }
+  --button="Reset to Default:2" --button="Cancel:1" --button="Install:0" \
+  "${rows[@]}")"
+rc=$?
+set -e
+
+# ---- "Reset to Default" button: safely undo everything Crema installed -------
+if [[ $rc -eq 2 ]]; then
+  yad "${css_arg[@]}" --question --title="Reset to system default?" \
+      --window-icon="$LOGO" --width=520 \
+      --text="This removes every file Crema installed and switches your desktop back to the KDE default (<b>Breeze</b>).\n\nIt only changes <b>your</b> user files — nothing system-wide, and no password is needed. Your panel layout is left untouched." \
+      --button="Cancel:1" --button="Reset to Default:0" || { echo "Cancelled."; exit 0; }
+  {
+    echo "# Switching the desktop back to the default (Breeze)…"; crema_unapply || true; echo 40
+    echo "# Removing Crema files…"; crema_uninstall "${COMPONENTS[@]}" || true; echo 100
+  } | yad "${css_arg[@]}" --progress --auto-close --auto-kill --title="Resetting to default" \
+          --window-icon="$LOGO" --width=460 --text="Starting…" --percentage=0
+  yad "${css_arg[@]}" --info --title="Reset — done" --width=540 \
+      --text="Your desktop has been reset to the system default.\n\n• Login screen (SDDM), if you applied it, reverts separately:\n  <tt>sudo ./sddm/apply-sddm.sh --revert</tt>" \
+      --button=OK:0 || true
+  exit 0
+elif [[ $rc -ne 0 ]]; then
+  echo "Cancelled."; exit 0
+fi
 
 # Parse selection
 todo=(); do_apply=0; do_sddm=0
@@ -53,7 +75,7 @@ while IFS= read -r id; do
 done <<< "$selected"
 
 if [[ ${#todo[@]} -eq 0 && $do_apply -eq 0 && $do_sddm -eq 0 ]]; then
-  yad "${css_arg[@]}" --info --title="Crema" --image="$LOGO" --text="Nothing selected." --button=OK:0
+  yad "${css_arg[@]}" --info --title="Crema" --text="Nothing selected." --button=OK:0
   exit 0
 fi
 
@@ -90,6 +112,6 @@ for c in "${todo[@]}"; do
   esac
 done
 
-yad "${css_arg[@]}" --info --title="Crema — done" --image="$LOGO" --width=540 \
+yad "${css_arg[@]}" --info --title="Crema — done" --width=540 \
     --text="<b>Installed:</b> ${todo[*]:-（none）}${notes}${sddm_note}\n\nManage anytime with ./install.sh --uninstall." \
     --button=OK:0 || true

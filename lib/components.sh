@@ -52,7 +52,7 @@ COMP_DESC[browser_chromium]="Set the built-in 'Orange' dark theme in Chrome/Brav
 COMP_LABEL[browser_firefox]="Firefox";          COMP_DEFAULT[browser_firefox]=FALSE
 COMP_DESC[browser_firefox]="Apply a Crema userChrome.css to your Firefox profiles"
 COMP_LABEL[launcher]="App-menu launcher";       COMP_DEFAULT[launcher]=TRUE
-COMP_DESC[launcher]="Add 'Crema Installer' to your application menu (clickable)"
+COMP_DESC[launcher]="Add 'CREMA Desktop Theme Installer' to your application menu (clickable)"
 
 # ---- Components -------------------------------------------------------------
 comp_colorscheme_install() {
@@ -235,8 +235,8 @@ comp_launcher_install() {
 [Desktop Entry]
 Type=Application
 Version=1.0
-Name=Crema Installer
-GenericName=Theme Installer
+Name=CREMA Desktop Theme Installer
+GenericName=Desktop Theme Installer
 Comment=Install the Crema espresso desktop theme
 Exec="$CREMA_ROOT/crema-installer.sh"
 Icon=$icon
@@ -265,6 +265,27 @@ crema_apply() {
   command -v plasma-apply-lookandfeel  >/dev/null 2>&1 && plasma-apply-lookandfeel -a "$LNF_ID" >/dev/null 2>&1 || true
   command -v plasma-apply-colorscheme  >/dev/null 2>&1 && plasma-apply-colorscheme Crema >/dev/null 2>&1 || true
   command -v plasma-apply-desktoptheme >/dev/null 2>&1 && plasma-apply-desktoptheme Crema >/dev/null 2>&1 || true
+}
+
+# Switch the live desktop back to the stock KDE default (Breeze). This only
+# rewrites the current user's Plasma appearance settings (~/.config) — exactly
+# what picking a Global Theme in System Settings does. It touches no system
+# files, needs no root, and does NOT reset your panel/widget layout (we never
+# pass --resetLayout). Every call is guarded so a missing tool is a no-op.
+crema_unapply() {
+  cinfo "Switching the desktop back to the system default (Breeze)..."
+  command -v plasma-apply-lookandfeel  >/dev/null 2>&1 && plasma-apply-lookandfeel -a org.kde.breeze.desktop >/dev/null 2>&1 || true
+  command -v plasma-apply-colorscheme  >/dev/null 2>&1 && { plasma-apply-colorscheme BreezeLight >/dev/null 2>&1 || plasma-apply-colorscheme BreezeDark >/dev/null 2>&1; } || true
+  command -v plasma-apply-desktoptheme >/dev/null 2>&1 && { plasma-apply-desktoptheme default >/dev/null 2>&1 || plasma-apply-desktoptheme breeze >/dev/null 2>&1; } || true
+}
+
+# Full safe reset: return the desktop to default, then remove every Crema
+# artifact (restoring any file we backed up). Strictly user-level — it never
+# touches system files and never needs root. The login screen (SDDM), if it was
+# applied, is a system file and reverts separately: sudo ./sddm/apply-sddm.sh --revert
+crema_reset() {
+  crema_unapply
+  crema_uninstall "${COMPONENTS[@]}"
 }
 
 # ---- Drivers ----------------------------------------------------------------

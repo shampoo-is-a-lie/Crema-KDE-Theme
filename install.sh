@@ -15,6 +15,8 @@
 #   ./install.sh --gui           Launch the visual installer (yad)
 #   ./install.sh --list          List component ids
 #   ./install.sh --uninstall     Remove everything (or with --only a,b)
+#   ./install.sh --reset         Reset to system default: switch back to
+#                                Breeze, then remove every Crema file
 #   ./install.sh --help
 #
 # Login screen (SDDM) is applied separately with sudo: ./sddm/apply-sddm.sh
@@ -24,7 +26,7 @@ CREMA_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=lib/components.sh
 source "$CREMA_ROOT/lib/components.sh"
 
-APPLY=0 UNINSTALL=0 WANT_FONT=0 ALL=0 ONLY="" GUI=0
+APPLY=0 UNINSTALL=0 RESET=0 WANT_FONT=0 ALL=0 ONLY="" GUI=0
 for arg in "$@"; do
   case "$arg" in
     --apply) APPLY=1 ;;
@@ -33,6 +35,7 @@ for arg in "$@"; do
     --only=*) ONLY="${arg#--only=}" ;;
     --gui) GUI=1 ;;
     --uninstall) UNINSTALL=1 ;;
+    --reset) RESET=1 ;;
     --list) printf '%s\n' "${COMPONENTS[@]}"; exit 0 ;;
     --help|-h) sed -n '3,24p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'; exit 0 ;;
     *) echo "Unknown option: $arg (try --help)"; exit 1 ;;
@@ -40,6 +43,14 @@ for arg in "$@"; do
 done
 
 if [[ $GUI -eq 1 ]]; then exec "$CREMA_ROOT/crema-installer.sh"; fi
+
+if [[ $RESET -eq 1 ]]; then
+  cinfo "Resetting to the system default (user-level, no root)..."
+  crema_reset
+  cinfo "Done. Your desktop is back to the KDE default (Breeze); all Crema files were removed."
+  echo "(Login screen, if applied, reverts with: sudo ./sddm/apply-sddm.sh --revert)"
+  exit 0
+fi
 
 # Resolve the component selection.
 selection=()
